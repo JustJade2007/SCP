@@ -29,19 +29,31 @@ const User = mongoose.model('User', userSchema);
 
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
+  console.log('--- Verifying Token ---'); // Log that the function is running
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Format: "Bearer TOKEN"
+  console.log('Received Authorization Header:', authHeader); // Log the exact header received
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('Header format is incorrect or missing.');
+    return res.status(401).send('Malformed authorization header.');
+  }
+
+  const token = authHeader.split(' ')[1];
 
   if (token == null) {
-    return res.sendStatus(401); // No token, unauthorized
+    console.log('No token found after "Bearer ".');
+    return res.sendStatus(401);
   }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      return res.sendStatus(403); // Token is invalid, forbidden
+      // Log the specific error from the JWT library
+      console.error('JWT Verification Error:', err.message);
+      return res.sendStatus(403);
     }
-    req.user = user; // Add the decoded user payload to the request
-    next(); // Proceed to the next function
+    console.log('Token successfully verified. User payload:', user);
+    req.user = user;
+    next();
   });
 };
 
