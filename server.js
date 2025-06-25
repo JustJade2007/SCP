@@ -2,16 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // <-- ADD THIS LINE
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
-
-// You'll need a secret key for your tokens. Add this to your .env file
-// JWT_SECRET='some_long_random_string_of_characters'
 const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(DATABASE_URL)
@@ -26,13 +23,40 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+// ==========================================================
+// ===== START OF NEW CODE ==================================
+// ==========================================================
+
+// Middleware to verify JWT
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Format: "Bearer TOKEN"
+
+  if (token == null) {
+    return res.sendStatus(401); // No token, unauthorized
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.sendStatus(403); // Token is invalid, forbidden
+    }
+    req.user = user; // Add the decoded user payload to the request
+    next(); // Proceed to the next function
+  });
+};
+
+// ==========================================================
+// ===== END OF NEW CODE ====================================
+// ==========================================================
+
+
 // --- API Endpoints ---
 app.get('/', (req, res) => {
   res.send('SCP Foundation Server is Running.');
 });
 
-// User Registration Endpoint (no changes here)
 app.post('/api/register', async (req, res) => {
+  // ... (This code remains unchanged)
   try {
     const { username, password } = req.body;
     const existingUser = await User.findOne({ username });
@@ -48,36 +72,42 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// ==========================================================
-// ===== START OF NEW CODE ==================================
-// ==========================================================
-
-// User Login Endpoint
 app.post('/api/login', async (req, res) => {
-  try {
+  // ... (This code remains unchanged)
+   try {
     const { username, password } = req.body;
-
-    // 1. Find the user in the database
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
-
-    // 2. Compare the provided password with the stored hash
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
-
-    // 3. If credentials are correct, create a token
     const token = jwt.sign(
-      { userId: user._id, accessLevel: user.accessLevel }, // This is the data stored in the token
-      JWT_SECRET, // The secret key to sign the token
-      { expiresIn: '1h' } // The token will expire in 1 hour
+      { userId: user._id, accessLevel: user.accessLevel },
+      JWT_SECRET,
+      { expiresIn: '1h' }
     );
-
     res.json({ message: 'Login successful!', token: token });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.', error: error.message });
+  }
+});
 
+// ==========================================================
+// ===== START OF NEW CODE ==================================
+// ==========================================================
+
+// A Protected Route
+app.get('/api/profile', verifyToken, async (req, res) => {
+  try {
+    // The verifyToken middleware has already run and attached the user data
+    const user = await User.findById(req.user.userId).select('-password'); // Find user but exclude password
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Server error.', error: error.message });
   }
