@@ -1,5 +1,14 @@
-SCP Foundation: Interactive AI Project
-This project is an interactive, web-based experience set in the SCP Foundation universe. It is being designed to move beyond static wiki pages by creating a dynamic environment where users can be assigned different security clearance levels and interact with AI-driven anomalies.
+# Run and deploy your AI Studio app
 
-About This Repository
-This GitHub repository serves as a live development log. It is updated regularly to showcase the progress of the project as new features are built and implemented.
+This contains everything you need to run your app locally.
+
+## Run Locally
+
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
