@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
     accessLevel: {
         type: String,
         required: true,
-        default: 'Level 1'
+        default: 'Researcher Tier 1' // Default applied by Mongoose if not provided
     }
 }, { timestamps: true });
 
@@ -92,10 +92,10 @@ app.get('/api', (req, res) => {
 // Register User
 app.post('/api/register', async (req, res) => {
     try {
-        const { username, password, accessLevel } = req.body;
+        let { username, password, accessLevel } = req.body;
 
-        if (!username || !password || !accessLevel) {
-            return res.status(400).json({ message: 'Username, password, and access level are required.' });
+        if (!username || !password) { // Access level is now optional from frontend for default
+            return res.status(400).json({ message: 'Username and password are required.' });
         }
 
         const existingUser = await User.findOne({ username });
@@ -106,11 +106,19 @@ app.post('/api/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new User({
+        // If accessLevel is not provided or is an empty string from the form,
+        // the Mongoose default 'Researcher Tier 1' will be used.
+        // If a specific accessLevel (like "05 Council") is provided, it will be used.
+        const newUserPayload = {
             username,
             password: hashedPassword,
-            accessLevel
-        });
+        };
+        if (accessLevel && accessLevel.trim() !== '') {
+            newUserPayload.accessLevel = accessLevel;
+        }
+
+
+        const newUser = new User(newUserPayload);
 
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully.' });
@@ -178,6 +186,29 @@ app.get('/api/profile', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Profile Fetch Error:', error);
         res.status(500).json({ message: 'Server error fetching profile.', error: error.message });
+    }
+});
+
+// Admin Route: Get all users (Protected for "05 Council")
+app.get('/api/admin/users', verifyToken, async (req, res) => {
+    try {
+        if (req.user.accessLevel !== '05 Council') {
+            return res.status(403).json({ message: 'Access Denied. Insufficient privileges.' });
+        }
+
+        const users = await User.find().select('-password').sort({ createdAt: -1 }); // Exclude passwords, sort by newest
+        res.json({
+            message: 'Users fetched successfully.',
+            users: users.map(user => ({
+                 _id: user._id,
+                 username: user.username,
+                 accessLevel: user.accessLevel,
+                 createdAt: user.createdAt
+            }))
+        });
+    } catch (error) {
+        console.error('Admin Fetch Users Error:', error);
+        res.status(500).json({ message: 'Server error fetching users for admin.', error: error.message });
     }
 });
 

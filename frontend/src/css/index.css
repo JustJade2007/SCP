@@ -184,3 +184,29 @@ footer {
         padding: 0.6rem 1.2rem;
     }
 }
+
+/* Admin View Styles */
+#admin-view h2 {
+    color: #ff6347; /* Distinct color for Admin Panel, e.g., tomato */
+}
+
+#admin-user-list-container {
+    margin-top: 1rem;
+}
+
+#admin-user-list-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#admin-user-list-container li {
+    background-color: #383838;
+    border: 1px solid #484848;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+#admin-user-list-container li strong {
+    color: #d4af37; /* Gold, matching other strong tags */
+}

@@ -14,6 +14,7 @@
             <button id="nav-login" class="nav-button">Login</button>
             <button id="nav-register" class="nav-button">Register</button>
             <button id="nav-profile" class="nav-button" style="display: none;">Profile</button>
+            <button id="nav-admin-panel" class="nav-button" style="display: none;">Admin Panel</button>
             <button id="logout-button" class="nav-button" style="display: none;">Logout</button>
         </nav>
     </header>
@@ -46,8 +47,8 @@
                     <input type="password" id="register-password" name="password" required aria-label="Registration Password">
                 </div>
                 <div>
-                    <label for="register-accessLevel">Access Level:</label>
-                    <input type="text" id="register-accessLevel" name="accessLevel" placeholder="e.g., Level 1, Researcher" required aria-label="Registration Access Level">
+                    <label for="register-accessLevel">Access Level (Optional):</label>
+                    <input type="text" id="register-accessLevel" name="accessLevel" placeholder="Default: Researcher Tier 1" aria-label="Registration Access Level">
                 </div>
                 <button type="submit">Register</button>
             </form>
@@ -57,6 +58,13 @@
             <h2>User Profile</h2>
             <div id="profile-info">
                 <p>Loading profile...</p>
+            </div>
+        </section>
+
+        <section id="admin-view" class="view" style="display: none;">
+            <h2>Admin Panel - User Management</h2>
+            <div id="admin-user-list-container">
+                <p>Loading users...</p>
             </div>
         </section>
 
