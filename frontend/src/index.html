@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP Foundation Portal</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script type="module" src="ts/index.tsx" defer></script>
+</head>
+<body>
+    <header>
+        <h1>SCP Foundation Access Portal</h1>
+        <nav>
+            <button id="nav-login" class="nav-button">Login</button>
+            <button id="nav-register" class="nav-button">Register</button>
+            <button id="nav-profile" class="nav-button" style="display: none;">Profile</button>
+            <button id="logout-button" class="nav-button" style="display: none;">Logout</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="login-view" class="view">
+            <h2>Login</h2>
+            <form id="login-form">
+                <div>
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" name="username" required aria-label="Login Username">
+                </div>
+                <div>
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" required aria-label="Login Password">
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <section id="register-view" class="view" style="display: none;">
+            <h2>Register</h2>
+            <form id="register-form">
+                <div>
+                    <label for="register-username">Username:</label>
+                    <input type="text" id="register-username" name="username" required aria-label="Registration Username">
+                </div>
+                <div>
+                    <label for="register-password">Password:</label>
+                    <input type="password" id="register-password" name="password" required aria-label="Registration Password">
+                </div>
+                <div>
+                    <label for="register-accessLevel">Access Level:</label>
+                    <input type="text" id="register-accessLevel" name="accessLevel" placeholder="e.g., Level 1, Researcher" required aria-label="Registration Access Level">
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+
+        <section id="profile-view" class="view" style="display: none;">
+            <h2>User Profile</h2>
+            <div id="profile-info">
+                <p>Loading profile...</p>
+            </div>
+        </section>
+
+        <div id="message-area" aria-live="polite"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SCP Foundation. Secure. Contain. Protect.</p>
+    </footer>
+</body>
+</html>
