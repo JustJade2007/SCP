@@ -6,3 +6,6 @@
 
 # Visual Studio settings
 /.vs
+
+# Test file
+test.http
