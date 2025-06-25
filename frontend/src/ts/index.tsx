@@ -1,3 +1,4 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -18,9 +19,10 @@ const logoutButton = document.getElementById('logout-button')!;
 const loginForm = document.getElementById('login-form') as HTMLFormElement;
 const registerForm = document.getElementById('register-form') as HTMLFormElement;
 
-// IMPORTANT: Replace 'YOUR_BACKEND_SERVICE_URL_HERE' with the actual URL of your deployed Render Web Service
-// e.g., 'https://your-app-name.onrender.com/api'
-const API_BASE_URL = 'YOUR_BACKEND_SERVICE_URL_HERE/api'; 
+// IMPORTANT: Replace 'https://your-scp-backend-appname.onrender.com' 
+// with the actual URL of your deployed Render Web Service.
+// The '/api' part should generally remain if your backend routes are prefixed with /api.
+const API_BASE_URL = 'https://your-scp-backend-appname.onrender.com/api'; 
 
 // --- State Management and UI Updates ---
 function showView(viewName: 'login' | 'register' | 'profile') {
