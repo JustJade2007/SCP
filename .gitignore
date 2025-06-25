@@ -9,3 +9,6 @@
 
 # Test file
 test.http
+
+# gitbash ignore
+/.git
