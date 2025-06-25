@@ -18,7 +18,9 @@ const logoutButton = document.getElementById('logout-button')!;
 const loginForm = document.getElementById('login-form') as HTMLFormElement;
 const registerForm = document.getElementById('register-form') as HTMLFormElement;
 
-const API_BASE_URL = '/api'; // Assuming backend is served from the same origin
+// IMPORTANT: Replace 'YOUR_BACKEND_SERVICE_URL_HERE' with the actual URL of your deployed Render Web Service
+// e.g., 'https://your-app-name.onrender.com/api'
+const API_BASE_URL = 'YOUR_BACKEND_SERVICE_URL_HERE/api'; 
 
 // --- State Management and UI Updates ---
 function showView(viewName: 'login' | 'register' | 'profile') {
